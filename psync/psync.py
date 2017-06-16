@@ -60,12 +60,13 @@ def rsync_cmds(local_path, conf):
     remote_path = conf["remote"]
     ignores = conf["ignores"]
 
-    cmds = ["rsync", "-e", "ssh", "-ruaz"]
+    cmds = ["rsync", "-e", "ssh", "-azPu", "--delete"]
 
     if len(ignores) > 0:
         cmds += exclude_sub_cmds(ignores)
 
-    cmds += ["--rsync-path", "mkdir -p {} && rsync".format(remote_path)]
+    #cmds += ["--rsync-path", "mkdir -p {} && rsync".format(remote_path)]
+    local_path = local_path+'/' if not local_path.endswith("/") else local_path
     cmds += [local_path, ssh_path(ssh_conf, remote_path)]
 
     return cmds
